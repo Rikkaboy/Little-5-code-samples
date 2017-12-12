@@ -1,0 +1,45 @@
+BEGIN STEP:
+if(is_paused = 0)
+{
+	if(obj_bike_body.can_petal == 0) && (tired == 0)
+	{
+		tired = 1;
+		alarm_set(0, 5);
+	}
+	
+	if(obj_bike_body.can_petal == 1) && (tired == 1)
+	{
+		tired = 0;
+	}
+}
+
+ALARM 0:
+if(is_paused == 0)
+{
+	if(obj_bike_body.can_petal == 0)
+	{
+		if(image_index == 1)
+		{
+			image_index = 2;
+			sprite_set_offset(player_head, 40, 80);
+		}
+		else
+		{
+			image_index = 1;
+			sprite_set_offset(player_head, 29, 75);
+		}
+		alarm_set(0, 12);
+		
+	}
+	else
+	{
+		image_index = 0;
+		sprite_set_offset(player_head, 30, 77);
+	}
+}
+
+ROOM START:
+image_index = 0;
+image_speed = 0;
+tired = 0;
+played = 0;

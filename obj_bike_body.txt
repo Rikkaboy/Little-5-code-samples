@@ -1,0 +1,144 @@
+STEP:
+// moving forward
+if(is_paused == 0) && (GameOver == 0)
+{
+	speed = movement;
+	
+	obj_player_head.speed = movement;
+	obj_player_wheel.speed = movement;
+	obj_player_wheel_2.speed = movement;
+	obj_cam_lock.speed = movement;
+	
+	
+}
+else
+{
+	speed = 0;
+	obj_player_wheel.speed = 0;
+	obj_player_wheel_2.speed = 0;
+	obj_player_head.speed = 0
+	obj_cam_lock.speed = 0;
+}
+
+// losing speed
+if(is_paused == 0){
+
+	movement -= speed_loss;
+}
+
+if(movement < 0)
+{
+	movement = 0;
+}
+
+ALARM 0:
+if(is_paused == 0)
+{
+	petal_limit += petal_gain;
+
+	if(petal_limit > 15)
+	{
+		petal_limit = 15;
+		if(can_petal == 0)
+		{
+			can_petal = 1;
+			speed_loss = 0.06;
+			petal_gain = 0.2;
+			audio_stop_sound(tired_sound);
+			if(sound_on == 1)
+			{
+				audio_play_sound(breath_back, 0, 0);
+			}
+		}
+	}
+}
+alarm_set(0, recovery);
+
+ALARM 1:
+if(countdown_num == 0)
+{
+	countdown_num = 1;
+	alarm_set(1, 60);
+}
+else if(countdown_num == 1)
+{
+	countdown_num = 2;
+	alarm_set(1, 60);
+	
+}
+else if (countdown_num == 2)
+{
+	countdown_num = 3;
+	GameOver = 0;
+	alarm_set(1,60);
+}
+else
+{
+	countdown_num = 4;
+}
+
+ALARM 2:
+GameOver = 1;
+
+
+instance_activate_layer("GO_buttons");
+layer_set_visible("GO_buttons", 1);
+
+instance_activate_layer("GO_background");
+layer_set_visible("GO_background", 1);
+
+DRAW GUI:
+draw_sprite_ext(countdown, countdown_num, camera_get_view_width(view_camera[0])/2, camera_get_view_height(view_camera[0])/2, 1, 1, 0, c_white, 1);
+
+OUTSIDE ROOM:
+obj_UI.time_up = 1;
+alarm_set(2, 60*3);
+if(sound_on == 1)
+{
+	audio_stop_sound(cheering);
+	if(obj_UI.placement == "1st") || (obj_UI.placement == "2nd") || (obj_UI.placement == "3rd")
+	{
+		audio_play_sound(end_cheering, 0, 0);
+	}
+}
+if(obj_UI.time < highscore) || (highscore == 0)
+{
+	highscore= obj_UI.time;
+}
+
+ini_open("highscore2.sav");
+if (highscore < ini_read_real("Save1", "HighScore", 0)) || (ini_read_real("Save1", "HighScore", 0) == 0)
+{
+ini_write_real("Save1", "HighScore", highscore);
+}
+
+ini_close();
+
+ROOM START:
+// globals
+movement = 0;
+can_petal = 1;
+recovery = 1.8;
+alarm_set(0, recovery);
+petal_limit = 15;
+speed_loss = 0.06;
+animate = 0;
+petal_gain = 0.2;
+speed_gain = 2.2;
+max_speed = 20;
+
+ini_open("highscore2.sav");
+highscore = ini_read_real("Save1", "HighScore", 0);
+ini_close();
+
+globalvar GameOver;
+GameOver = 1;
+
+countdown_num = 0;
+alarm_set(1, 60);
+
+instance_deactivate_layer("GO_buttons");
+instance_deactivate_layer("GO_background");
+
+image_index = 0;
+image_speed = 0;

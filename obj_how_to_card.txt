@@ -1,0 +1,75 @@
+STEP:
+if(obj_next_back.text == "Next")
+{
+	toggle = 0;
+}
+else
+{
+	toggle = 1;
+}
+
+DRAW GUI:
+draw_set_font(font_How_To);
+draw_set_color(make_color_rgb(153, 0, 0));
+
+draw_text_transformed(150, 10, "How To Play", 1, 1, 0);
+
+if(toggle == 0)
+{
+	draw_set_font(font_How_To_header);
+	draw_text_transformed(50, 60, "Goal:", 1, 1, 0);
+	
+	draw_set_font(font_How_To_small);
+	draw_text_transformed(60, 95, "Pedal as fast as you can to win the big race!", 1, 1, 0);
+	
+	draw_set_font(font_How_To_header);
+	draw_text_transformed(50, 120, "Instructions:", 1, 1, 0);
+	
+	draw_set_font(font_How_To_small);
+	draw_text_transformed(60, 155, "Left click or tap to pedal your bike.", 1, 1, 0);
+	
+	draw_sprite_ext(h_t_p_bike, 0, 480, 170, 1, 1, 0, c_white, 1);
+	
+	draw_sprite_ext(h_t_p_stam_1, 0, 480, 240, 1, 1, 0, c_white, 1);
+	
+	draw_sprite_ext(h_t_p_stam_0_5, 0, 480, 305, 1, 1, 0, c_white, 1);
+	
+	draw_sprite_ext(h_t_p_stam_0, 0, 480, 370, 1, 1, 0, c_white, 1);
+	
+	draw_text_transformed(100, 225, "This bar is your Stamina.", 1, 1, 0);
+	
+	
+	draw_text_transformed(97, 290, "You use Stamina to pedal.", 1, 1, 0);
+	
+	
+	draw_text_transformed(165, 355, "Try not to run out!", 1, 1, 0);
+	
+	
+	
+}
+else
+{
+	draw_set_font(font_How_To_header);
+	draw_text_transformed(50, 60, "Mud:", 1, 1, 0);
+	
+	draw_set_font(font_How_To_small);
+	draw_text_ext_transformed(60, 95, "It won't be a smooth ride! You'll occasionally come across mud in the track, which drains your stamina. So make sure you have some stamina to spare!", 20, 500, 1, 1, 0);
+	
+	draw_text_transformed(300, 180, "Mud", 1, 1, 0);
+	
+	draw_sprite_ext(mud, 0, 395, 180, 1, 1, 0, c_white, 1);
+	
+	draw_set_font(font_How_To_header);
+	draw_text_transformed(50, 210, "Water:", 1, 1, 0);
+	
+	draw_set_font(font_How_To_small);
+	draw_text_ext_transformed(60, 245, "Luckily, there is some water left! Picking up one of these on the track will instantly refill your stamina.", 20, 500, 1, 1, 0);
+	
+	draw_text_transformed(290, 330, "Water", 1, 1, 0);
+	
+	draw_sprite_ext(water, 0, 410, 300, 1, 1, 0, c_white, 1);
+	
+}
+
+ROOM START:
+toggle = 0;

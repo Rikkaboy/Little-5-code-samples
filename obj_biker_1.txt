@@ -1,0 +1,40 @@
+CREATE:
+AniStart = 0;
+
+STEP:
+if(GameOver == 0) && (is_paused == 0)
+{
+	speed = 25.3;
+	obj_biker_1_wheel.speed = speed;
+	obj_biker_1_wheel_2.speed = speed;
+}
+else
+{
+	speed = 0;
+	obj_biker_1_wheel.speed = speed;
+	obj_biker_1_wheel_2.speed = speed;
+}
+
+if(GameOver == 0) && (AniStart == 0)
+{
+	alarm_set(0, 2);
+	AniStart = 1;
+}
+
+ALARM 0:
+if(GameOver == 0) && (is_paused == 0)
+{
+	if(image_index == 0)
+	{
+		image_index = 1;
+	}
+	else
+	{
+		image_index = 0;
+	}
+}
+alarm_set(0, 20);
+
+ROOM START:
+image_index = 0;
+image_speed = 0;

@@ -1,0 +1,30 @@
+STEP:
+if (Checkmouse(x, y, sprite_width, sprite_height))
+{
+	image_xscale = 1.1;
+	image_yscale = 1.1;
+}
+else
+{
+	image_xscale = 1;
+	image_yscale = 1;
+}
+
+if(mouse_check_button_released(mb_left)) && (Checkmouse(x, y, sprite_width, sprite_height))
+{
+	if(sound_on == 1)
+	{
+		sound_on = 0;
+		obj_sound_icon_TS.image_index = 1;
+	}
+	else
+	{
+		sound_on = 1;
+		obj_sound_icon_TS.image_index = 0;
+	}
+
+}
+
+ROOM START:
+globalvar sound_on;
+sound_on = 1;

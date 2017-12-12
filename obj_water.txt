@@ -1,0 +1,12 @@
+>< OBJ_BIKE_BODY:
+obj_bike_body.petal_limit = 15;
+
+if(sound_on == 1)
+{
+	randomize();
+	audio_sound_pitch(gulp, random_range(0.8, 1.2))
+	audio_play_sound(gulp, 0, 0);
+}
+splat_count += 1;
+show_debug_message(splat_count);
+instance_destroy(id);

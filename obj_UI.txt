@@ -1,0 +1,289 @@
+ROOM START:
+randomize();
+if(sound_on == 1)
+{
+	sound_sub = 0;
+	audio_play_sound(cheering, 0, 1);
+}
+else
+{
+	sound_sub = 1;
+}
+
+if(music_on == 1)
+{
+	music_sub = 0;
+	audio_play_sound(main_music, 0, 1);
+	
+}
+else
+{
+	music_sub = 1;
+}
+
+bar_background = c_white;
+trigger = 0;
+
+//mud debug
+globalvar mud_hit;
+mud_hit = 0;
+
+time = 0;
+time_up = 0;
+bar_amount = 319;
+
+icon_location = ((obj_bike_body.x/room_width) * camera_get_view_width(view_camera[0]));
+icon_1_location = ((obj_biker_1.x/room_width) * camera_get_view_width(view_camera[0]));
+icon_2_location = ((obj_biker_2.x/room_width) * camera_get_view_width(view_camera[0]));
+icon_3_location = ((obj_biker_3.x/room_width) * camera_get_view_width(view_camera[0]));
+icon_4_location = ((obj_biker_4.x/room_width) * camera_get_view_width(view_camera[0]));
+icon_5_location = ((obj_biker_5.x/room_width) * camera_get_view_width(view_camera[0]));
+icon_6_location = ((obj_biker_6.x/room_width) * camera_get_view_width(view_camera[0]));
+
+placement = "4th";
+
+mud_to_place = 6;
+wa_wa = 2;
+
+globalvar splat_count;
+splat_count = 0;
+while (mud_to_place > 0)
+{
+	rand_x = random_range(5000, 37481);
+	main_mud = instance_create_layer(rand_x, 460, "Items", obj_mud1);
+	if (!(position_meeting(main_mud.x, main_mud.y, obj_mud)))
+	{
+	instance_create_layer(rand_x, 460, "Items", obj_mud);
+	mud_to_place -= 1;
+	}
+	instance_destroy(main_mud.id);
+}
+
+while (wa_wa > 0)
+{
+	rand_x = random_range(5000, 37481);
+	if(!position_meeting(rand_x, 380, obj_water))
+	{
+		instance_create_layer(rand_x, 380,"Items", obj_water);
+		wa_wa -= 1;
+	}
+}
+
+DRAW GUI:
+if (GameOver == 0)
+{
+
+// seting up UI
+draw_sprite_ext(UI_top_bar, 0, 0, 0, 1, 1, 0, c_white, 1);
+draw_sprite_ext(UI_timer, 0, 0, 0, 1, 1, 0, c_white, 1);
+
+draw_healthbar(165, 5, 475, 50, bar_amount, bar_background, make_color_rgb(152, 2, 1,), make_color_rgb(152, 2, 1,), 0, 1, 0);
+draw_sprite_ext(UI_stam_back, 0, 320, 0, 1, 1, 0, c_white, 1);
+draw_sprite_ext(btn_pause_back, 0, 510, 30, 1, 1, 0, c_white, 1);
+draw_sprite_ext(btn_sound_back_main, 0, 565, 23, 1, 1, 0, c_white, 1);
+draw_sprite_ext(btn_music_back_main, 0, 615, 23, 1, 1, 0, c_white, 1);
+draw_sprite_ext(pause_front, 0, 510, 30, 1, 1, 0, c_white, 1);
+draw_sprite_ext(btn_sound_front_TS, sound_sub, 566, 20, 0.7, 0.7, 0, c_white, 1);
+draw_sprite_ext(btn_music_front_TS, music_sub, 617, 20, 0.7, 0.7, 0, c_white, 1);
+draw_sprite_ext(icon_6, 0, icon_6_location, 150, 1, 1, 0, c_white, 1);
+draw_sprite_ext(icon_5, 0, icon_5_location, 150, 1, 1, 0, c_white, 1);
+draw_sprite_ext(icon_4, 0, icon_4_location, 150, 1, 1, 0, c_white, 1);
+draw_sprite_ext(icon_3, 0, icon_3_location, 150, 1, 1, 0, c_white, 1);
+draw_sprite_ext(icon_2, 0, icon_2_location, 150, 1, 1, 0, c_white, 1);
+draw_sprite_ext(icon_1, 0, icon_1_location, 150, 1, 1, 0, c_white, 1);
+draw_sprite_ext(UI_bike_icon, 0, icon_location, 150, 1, 1, 0, c_white, 1);
+draw_sprite_ext(icon_bar, 0, 0, 138, 1, 1, 0, c_white, 1);
+
+// drawing text
+draw_set_font(font_timer);
+draw_set_color(c_black);
+draw_text_transformed(12, 8, string_format(time, 0,2), 1, 1, 0);
+
+
+draw_set_font(font_placement);
+draw_set_color(c_white);
+//draw_text(scale_to_size_x(0), scale_to_size_y(50), placement);
+draw_text_transformed(0, 50, placement, 1, 1, 0);
+}
+
+ALARM 0:
+bar_background = c_white;
+
+STEP:
+x = camera_get_view_x(view_camera[0]);
+y = camera_get_view_y(view_camera[0]);
+
+if (sound_on == 1)
+{
+	sound_sub = 0;
+}
+else
+{
+	sound_sub = 1;
+}
+
+if (music_on == 1)
+{
+	music_sub = 0;
+}
+else
+{
+	music_sub = 1;
+}
+
+
+//timer
+if(is_paused == 0)&&(GameOver == 0) && (time_up == 0)
+{
+	
+	time += 1/60;
+	bar_amount = (obj_bike_body.petal_limit/15) * 100;
+	icon_location =  ((obj_bike_body.x/room_width)* camera_get_view_width(view_camera[0]));
+	icon_1_location = ((obj_biker_1.x/room_width) * camera_get_view_width(view_camera[0]));
+	icon_2_location = ((obj_biker_2.x/room_width) * camera_get_view_width(view_camera[0]));
+	icon_3_location = ((obj_biker_3.x/room_width) * camera_get_view_width(view_camera[0]));
+	icon_4_location = ((obj_biker_4.x/room_width) * camera_get_view_width(view_camera[0]));
+	icon_5_location = ((obj_biker_5.x/room_width) * camera_get_view_width(view_camera[0]));
+	icon_6_location = ((obj_biker_6.x/room_width) * camera_get_view_width(view_camera[0]));
+}
+
+//placement check
+if(time_up == 0) && (GameOver == 0)
+{
+	if(obj_bike_body.x > obj_biker_1.x)
+	{
+		placement = "1st";
+	}
+	else if (obj_bike_body.x > obj_biker_2.x)
+	{
+		placement = "2nd"
+	}
+	else if (obj_bike_body.x > obj_biker_3.x)
+	{
+		placement = "3rd";
+	}
+	else if (obj_bike_body.x > obj_biker_4.x)
+	{
+		placement = "4th";
+	}
+	else if (obj_bike_body.x > obj_biker_5.x)
+	{
+		placement = "5th";
+	}
+	else if (obj_bike_body.x > obj_biker_6.x)
+	{
+		placement = "6th";
+	}
+	else
+	{
+		placement = "7th";
+	}
+}
+
+//UI flash
+if(trigger == 1)
+{
+	bar_background = c_red;
+	alarm_set(0, 10);
+	trigger = 0
+}
+
+//clicking foward
+if (mouse_check_button_released(mb_left)) && (!Checkmouse(510, 30, obj_pause.sprite_width, obj_pause.sprite_height)) && (!Checkmouse(565, 23, obj_sound_main.sprite_width, obj_sound_main.sprite_height))&& (!Checkmouse(615, 23, obj_music_main.sprite_width, obj_music_main.sprite_height))
+{
+	if(is_paused == 0) && (GameOver == 0)
+	{
+		// movement
+		if(obj_bike_body.can_petal == 1)
+		{
+			if(obj_bike_body.movement < 10)
+			{
+				obj_bike_body.movement += 5;
+			}
+			else
+			{
+				obj_bike_body.movement += obj_bike_body.speed_gain;
+			}
+			
+			obj_bike_body.petal_limit -= 5;
+			obj_player_wheel.speed = obj_bike_body.movement;
+			obj_player_head.speed = obj_bike_body.movement;
+		
+			// animate
+			if(obj_bike_body.image_index == 0)
+			{
+				obj_bike_body.image_index = 1;
+			}
+			else
+			{
+				obj_bike_body.image_index = 0;
+			}
+		
+			// sound fx
+			if(sound_on == 1)
+			{
+				randomize();
+				audio_sound_pitch(petal, random_range(0.5, 1.5));
+				audio_play_sound(petal, 10, 0);
+			}
+		}
+
+		// over-petal
+		if(obj_bike_body.petal_limit <= 0)
+		{
+			obj_bike_body.petal_limit = 0;
+			obj_bike_body.can_petal = 0;
+			obj_bike_body.speed_loss = .2;
+			obj_bike_body.petal_gain = 0.15;
+		
+			if(sound_on == 1)
+			{
+				audio_play_sound(tired_sound, 0, 1);
+			}
+		}
+	}
+}
+
+//pause
+if (mouse_check_button_released(mb_left)) && (Checkmouse(510, 30, obj_pause.sprite_width, obj_pause.sprite_height))
+{
+ if(is_paused == 0)
+ {
+	is_paused = 1;
+ }
+ else
+ {
+	is_paused = 0;
+ }
+}
+
+// sound
+if(mouse_check_button_released(mb_left)) && (Checkmouse(565, 23, obj_sound_main.sprite_width, obj_sound_main.sprite_height))
+{
+	if (sound_on == 1)
+	{
+		sound_on = 0;
+		audio_stop_sound(cheering);
+	}
+	else
+	{
+		sound_on = 1;
+		audio_play_sound(cheering, 0, 1);
+	}
+}
+
+// music
+
+if(mouse_check_button_released(mb_left)) && (Checkmouse(615, 23, obj_music_main.sprite_width, obj_music_main.sprite_height))
+{
+	if (music_on == 1)
+	{
+		music_on = 0;
+		audio_stop_sound(main_music);
+	}
+	else
+	{
+		music_on = 1;
+		audio_play_sound(main_music, 0, 1);
+	}
+}
